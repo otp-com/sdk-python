@@ -1,0 +1,30 @@
+name: Regenerate from spec
+# Fires when otp-com/sdk dispatches `spec-updated`, or run manually ("Update from spec"). Fetches the
+# latest OpenAPI contract, regenerates the client, and opens a PR with any changes for review.
+on:
+  repository_dispatch:
+    types: [spec-updated]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the latest contract
+        run: curl -sSL -o openapi.yaml https://raw.githubusercontent.com/otp-com/sdk/main/openapi.yaml
+      - name: Generate client
+        run: |
+          docker run --rm -v "$PWD":/local openapitools/openapi-generator-cli generate \
+            -i /local/openapi.yaml -g python -o /local \
+            --additional-properties=packageName=otp_sdk,projectName=otp-sdk,packageVersion=1.0.0
+          rm -f openapi.yaml
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/regenerate-from-spec
+          title: 'chore: regenerate from latest OpenAPI spec'
+          commit-message: 'chore: regenerate from latest OpenAPI spec'
+          body: Automated regeneration from otp-com/sdk. Review and merge to cut a release.
