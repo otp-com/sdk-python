@@ -13,9 +13,27 @@ Requires Python 3.10+. Fully type-annotated, models are Pydantic v2.
 
 ## Install
 
+Not on PyPI yet, so install from GitHub:
+
 ```sh
-pip install otp-sdk
+pip install "otp-sdk @ git+https://github.com/otp-com/sdk-python@main"
 ```
+
+The same line works in `requirements.txt`. For a build that cannot move under you, pin the commit:
+
+```
+otp-sdk @ git+https://github.com/otp-com/sdk-python@<commit-sha>
+```
+
+uv and Poetry take the same source:
+
+```sh
+uv add "otp-sdk @ git+https://github.com/otp-com/sdk-python@main"
+poetry add "git+https://github.com/otp-com/sdk-python#main"
+```
+
+The distribution is `otp-sdk`, the import is `otp_sdk`. Once the package is on PyPI, `pip install
+otp-sdk` is enough.
 
 ## Quickstart
 
