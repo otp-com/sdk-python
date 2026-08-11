@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**recipient** | **str** | Phone number in E.164 (e.g. +14155552671) or an email address. | 
-**locale** | **str** | Message language, e.g. \&quot;en\&quot; or \&quot;tr\&quot;. | [optional] 
+**recipient** | **str** | Phone number (E.164) or email address to deliver the OTP to. | 
+**locale** | **str** | BCP-47 locale for the message template; falls back to the app default. | [optional] 
 
 ## Example
 

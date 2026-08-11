@@ -17,22 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from uuid import UUID
-from otp_sdk.models.status import Status
+from otp_sdk.models.error_body import ErrorBody
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class OtpStatusResponse(BaseModel):
+class ErrorResponse(BaseModel):
     """
-    OtpStatusResponse
+    ErrorResponse
     """ # noqa: E501
-    otp_id: UUID
-    status: Status
-    masked_recipient: StrictStr = Field(description="Recipient with the middle digits masked.", json_schema_extra={"examples": ["+14****71"]})
-    __properties: ClassVar[List[str]] = ["otp_id", "status", "masked_recipient"]
+    error: ErrorBody
+    __properties: ClassVar[List[str]] = ["error"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -52,7 +49,7 @@ class OtpStatusResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OtpStatusResponse from a JSON string"""
+        """Create an instance of ErrorResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,11 +70,14 @@ class OtpStatusResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of error
+        if self.error:
+            _dict['error'] = self.error.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OtpStatusResponse from a dict"""
+        """Create an instance of ErrorResponse from a dict"""
         if obj is None:
             return None
 
@@ -85,9 +85,7 @@ class OtpStatusResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "otp_id": obj.get("otp_id"),
-            "status": obj.get("status"),
-            "masked_recipient": obj.get("masked_recipient")
+            "error": ErrorBody.from_dict(obj["error"]) if obj.get("error") is not None else None
         })
         return _obj
 

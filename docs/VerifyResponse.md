@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **otp_id** | **UUID** |  | 
 **status** | [**Status**](Status.md) |  | 
-**matched** | **bool** |  | 
+**matched** | **bool** | Whether the submitted code matched. | 
 
 ## Example
 

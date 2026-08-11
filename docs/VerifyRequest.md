@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**otp_id** | **UUID** |  | 
-**code** | **str** |  | 
+**otp_id** | **UUID** | The OTP id returned by send/resend. | 
+**code** | **str** | The code the recipient entered. | 
 
 ## Example
 

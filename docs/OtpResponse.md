@@ -7,9 +7,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **otp_id** | **UUID** |  | 
 **status** | [**Status**](Status.md) |  | 
-**channel** | [**Channel**](Channel.md) |  | 
-**masked_recipient** | **str** | Recipient with the middle masked, e.g. +14****71. | 
-**action_url** | **str** | WhatsApp link the user opens to receive the code: they send us the prefilled message and we reply with the code over WhatsApp. Present only when the OTP was dispatched on the whatsapp channel; null otherwise. Verification is the same on every channel: the user enters the code and you call &#x60;/otp/verify&#x60;.  | [optional] 
+**channel** | [**Channel**](Channel.md) | Channel the OTP was dispatched on; null until routed. | 
+**masked_recipient** | **str** | Recipient with the middle digits masked. | 
+**action_url** | **str** | WhatsApp link the user opens to receive the code: they send us the prefilled message and we reply with the code over WhatsApp, then they enter it and you call POST /otp/verify. Present only when dispatched on the whatsapp channel; null otherwise. | [optional] 
 
 ## Example
 

@@ -3,9 +3,9 @@
 .gitlab-ci.yml
 .travis.yml
 docs/Channel.md
-docs/Error.md
-docs/ErrorError.md
-docs/OTPApi.md
+docs/ErrorBody.md
+docs/ErrorResponse.md
+docs/OtpApi.md
 docs/OtpResponse.md
 docs/OtpStatusResponse.md
 docs/ResendRequest.md
@@ -23,8 +23,8 @@ otp_sdk/configuration.py
 otp_sdk/exceptions.py
 otp_sdk/models/__init__.py
 otp_sdk/models/channel.py
-otp_sdk/models/error.py
-otp_sdk/models/error_error.py
+otp_sdk/models/error_body.py
+otp_sdk/models/error_response.py
 otp_sdk/models/otp_response.py
 otp_sdk/models/otp_status_response.py
 otp_sdk/models/resend_request.py
@@ -40,4 +40,6 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_error_body.py
+test/test_error_response.py
 tox.ini

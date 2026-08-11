@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **otp_id** | **UUID** |  | 
 **status** | [**Status**](Status.md) |  | 
-**masked_recipient** | **str** |  | 
+**masked_recipient** | **str** | Recipient with the middle digits masked. | 
 
 ## Example
 

@@ -18,21 +18,19 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from uuid import UUID
-from otp_sdk.models.status import Status
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class OtpStatusResponse(BaseModel):
+class ErrorBody(BaseModel):
     """
-    OtpStatusResponse
+    ErrorBody
     """ # noqa: E501
-    otp_id: UUID
-    status: Status
-    masked_recipient: StrictStr = Field(description="Recipient with the middle digits masked.", json_schema_extra={"examples": ["+14****71"]})
-    __properties: ClassVar[List[str]] = ["otp_id", "status", "masked_recipient"]
+    type: StrictStr = Field(description="Machine-readable error class, e.g. \"OtpNotFoundError\".", json_schema_extra={"examples": ["OtpNotFoundError"]})
+    message: StrictStr = Field(description="Human-readable message. Safe to log; never contains the OTP code.")
+    details: Optional[Dict[str, Any]] = Field(default=None, description="Structured context, present on validation errors ({loc, msg, type} per field) and a few domain errors.")
+    __properties: ClassVar[List[str]] = ["type", "message", "details"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -52,7 +50,7 @@ class OtpStatusResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OtpStatusResponse from a JSON string"""
+        """Create an instance of ErrorBody from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +75,7 @@ class OtpStatusResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OtpStatusResponse from a dict"""
+        """Create an instance of ErrorBody from a dict"""
         if obj is None:
             return None
 
@@ -85,9 +83,9 @@ class OtpStatusResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "otp_id": obj.get("otp_id"),
-            "status": obj.get("status"),
-            "masked_recipient": obj.get("masked_recipient")
+            "type": obj.get("type"),
+            "message": obj.get("message"),
+            "details": obj.get("details")
         })
         return _obj
 

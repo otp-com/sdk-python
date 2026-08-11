@@ -1,6 +1,6 @@
 # Channel
 
-The channel the OTP was sent on (null before a channel is chosen).
+Channel the OTP was dispatched on; null until routed.
 
 ## Enum
 

@@ -1,6 +1,5 @@
 # Status
 
-OTP lifecycle status.
 
 ## Enum
 
