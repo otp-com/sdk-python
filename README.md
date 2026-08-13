@@ -50,7 +50,9 @@ with otp_sdk.ApiClient(config) as client:
     otp = otp_sdk.OTPApi(client)
 
     # 1. Send. You pass the recipient; your account routing picks the channel.
-    sent = otp.send_otp(otp_sdk.SendRequest(recipient="+14155552671", locale="en"))
+    # client_ip = the END USER's IP from your request context, not your server's:
+    # requests without it share a much tighter rate limit.
+    sent = otp.send_otp(otp_sdk.SendRequest(recipient="+14155552671", locale="en", client_ip="81.2.69.142"))
 
     sent.otp_id            # keep this: you verify against it
     sent.channel           # "sms" | "whatsapp" | "email" | "telegram"

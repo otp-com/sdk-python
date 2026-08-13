@@ -15,6 +15,18 @@ jobs:
       - uses: actions/checkout@v4
       - name: Fetch the latest contract
         run: curl -sSL -o openapi.yaml https://raw.githubusercontent.com/otp-com/sdk/main/openapi.yaml
+      # The generator never deletes an output that fell out of the spec, and on a case-insensitive
+      # dev disk a case-only rename overwrites the old file instead of replacing it. Delete the
+      # previous run's outputs first; anything still current is rewritten by the generate step.
+      # Hand-maintained files (.openapi-generator-ignore + test stubs) are not in the manifest.
+      # Must stay identical to update-sdk.sh in otp-com/sdk.
+      - name: Prune previous outputs
+        run: |
+          [ -f .openapi-generator/FILES ] || exit 0
+          while IFS= read -r f; do
+            case "$f" in ''|/*|*..*) continue ;; esac
+            rm -f "./$f"
+          done < .openapi-generator/FILES
       - name: Generate client
         run: |
           docker run --rm -v "$PWD":/local openapitools/openapi-generator-cli generate \

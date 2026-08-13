@@ -18,7 +18,7 @@ __version__ = "1.0.0"
 
 # Define package exports
 __all__ = [
-    "OtpApi",
+    "OTPApi",
     "ApiResponse",
     "ApiClient",
     "Configuration",
@@ -41,7 +41,7 @@ __all__ = [
 ]
 
 # import apis into sdk package
-from otp_sdk.api.otp_api import OtpApi as OtpApi
+from otp_sdk.api.otp_api import OTPApi as OTPApi
 
 # import ApiClient
 from otp_sdk.api_response import ApiResponse as ApiResponse

@@ -1,13 +1,13 @@
-# otp_sdk.OtpApi
+# otp_sdk.OTPApi
 
 All URIs are relative to *https://api.otp.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_otp_status**](OtpApi.md#get_otp_status) | **GET** /api/v1/otp/{otp_id} | Fetch the current status of an OTP.
-[**resend_otp**](OtpApi.md#resend_otp) | **POST** /api/v1/otp/resend | Resend a pending OTP, escalating the channel if configured.
-[**send_otp**](OtpApi.md#send_otp) | **POST** /api/v1/otp/send | Start an OTP: routes a channel and dispatches the code.
-[**verify_otp**](OtpApi.md#verify_otp) | **POST** /api/v1/otp/verify | Verify a code against a pending OTP.
+[**get_otp_status**](OTPApi.md#get_otp_status) | **GET** /api/v1/otp/{otp_id} | Fetch the current status of an OTP.
+[**resend_otp**](OTPApi.md#resend_otp) | **POST** /api/v1/otp/resend | Resend a pending OTP, escalating the channel if configured.
+[**send_otp**](OTPApi.md#send_otp) | **POST** /api/v1/otp/send | Start an OTP: routes a channel and dispatches the code.
+[**verify_otp**](OTPApi.md#verify_otp) | **POST** /api/v1/otp/verify | Verify a code against a pending OTP.
 
 
 # **get_otp_status**
@@ -44,16 +44,16 @@ configuration = otp_sdk.Configuration(
 # Enter a context with an instance of the API client
 with otp_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = otp_sdk.OtpApi(api_client)
+    api_instance = otp_sdk.OTPApi(api_client)
     otp_id = UUID('38400000-8cf0-11bd-b23e-10b96e4ef00d') # UUID | 
 
     try:
         # Fetch the current status of an OTP.
         api_response = api_instance.get_otp_status(otp_id)
-        print("The response of OtpApi->get_otp_status:\n")
+        print("The response of OTPApi->get_otp_status:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling OtpApi->get_otp_status: %s\n" % e)
+        print("Exception when calling OTPApi->get_otp_status: %s\n" % e)
 ```
 
 
@@ -124,16 +124,16 @@ configuration = otp_sdk.Configuration(
 # Enter a context with an instance of the API client
 with otp_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = otp_sdk.OtpApi(api_client)
+    api_instance = otp_sdk.OTPApi(api_client)
     resend_request = otp_sdk.ResendRequest() # ResendRequest | 
 
     try:
         # Resend a pending OTP, escalating the channel if configured.
         api_response = api_instance.resend_otp(resend_request)
-        print("The response of OtpApi->resend_otp:\n")
+        print("The response of OTPApi->resend_otp:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling OtpApi->resend_otp: %s\n" % e)
+        print("Exception when calling OTPApi->resend_otp: %s\n" % e)
 ```
 
 
@@ -209,17 +209,17 @@ configuration = otp_sdk.Configuration(
 # Enter a context with an instance of the API client
 with otp_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = otp_sdk.OtpApi(api_client)
+    api_instance = otp_sdk.OTPApi(api_client)
     send_request = otp_sdk.SendRequest() # SendRequest | 
     idempotency_key = 'idempotency_key_example' # str | Replay the prior response for a repeated request; a reused key with a different body is a 409. (optional)
 
     try:
         # Start an OTP: routes a channel and dispatches the code.
         api_response = api_instance.send_otp(send_request, idempotency_key=idempotency_key)
-        print("The response of OtpApi->send_otp:\n")
+        print("The response of OTPApi->send_otp:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling OtpApi->send_otp: %s\n" % e)
+        print("Exception when calling OTPApi->send_otp: %s\n" % e)
 ```
 
 
@@ -292,16 +292,16 @@ configuration = otp_sdk.Configuration(
 # Enter a context with an instance of the API client
 with otp_sdk.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = otp_sdk.OtpApi(api_client)
+    api_instance = otp_sdk.OTPApi(api_client)
     verify_request = otp_sdk.VerifyRequest() # VerifyRequest | 
 
     try:
         # Verify a code against a pending OTP.
         api_response = api_instance.verify_otp(verify_request)
-        print("The response of OtpApi->verify_otp:\n")
+        print("The response of OTPApi->verify_otp:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling OtpApi->verify_otp: %s\n" % e)
+        print("Exception when calling OTPApi->verify_otp: %s\n" % e)
 ```
 
 
