@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **recipient** | **str** | Phone number (E.164) or email address to deliver the OTP to. | 
 **locale** | **str** | BCP-47 locale for the message template; falls back to the app default. | [optional] 
+**client_ip** | **str** | IP address of the end user who triggered this OTP (IPv4 or IPv6). Strongly recommended: requests without it share a much tighter per-app rate limit, and it feeds abuse protection for your own traffic. Private/reserved addresses count as absent. | [optional] 
 
 ## Example
 

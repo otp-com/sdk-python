@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
@@ -30,7 +30,8 @@ class SendRequest(BaseModel):
     """ # noqa: E501
     recipient: Annotated[str, Field(min_length=1, strict=True, max_length=320)] = Field(description="Phone number (E.164) or email address to deliver the OTP to.", json_schema_extra={"examples": ["+14155552671"]})
     locale: Optional[Annotated[str, Field(strict=True, max_length=10)]] = Field(default=None, description="BCP-47 locale for the message template; falls back to the app default.", json_schema_extra={"examples": ["en"]})
-    __properties: ClassVar[List[str]] = ["recipient", "locale"]
+    client_ip: Optional[StrictStr] = Field(default=None, description="IP address of the end user who triggered this OTP (IPv4 or IPv6). Strongly recommended: requests without it share a much tighter per-app rate limit, and it feeds abuse protection for your own traffic. Private/reserved addresses count as absent.", json_schema_extra={"examples": ["81.2.69.142"]})
+    __properties: ClassVar[List[str]] = ["recipient", "locale", "client_ip"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -76,6 +77,11 @@ class SendRequest(BaseModel):
         if self.locale is None and "locale" in self.model_fields_set:
             _dict['locale'] = None
 
+        # set to None if client_ip (nullable) is None
+        # and model_fields_set contains the field
+        if self.client_ip is None and "client_ip" in self.model_fields_set:
+            _dict['client_ip'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +95,8 @@ class SendRequest(BaseModel):
 
         _obj = cls.model_validate({
             "recipient": obj.get("recipient"),
-            "locale": obj.get("locale")
+            "locale": obj.get("locale"),
+            "client_ip": obj.get("client_ip")
         })
         return _obj
 
