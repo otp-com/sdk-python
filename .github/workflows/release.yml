@@ -1,0 +1,59 @@
+name: Release
+# Manual release: enter a version, it tests, bumps the version, then tags and creates a GitHub release.
+# Nothing is uploaded to PyPI: installs come from the git tag.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without a leading v (e.g. 1.1.0)'
+        required: true
+        type: string
+permissions:
+  contents: write # push the version commit and tag, create the release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      # The lowest version pyproject.toml allows, so a release cannot ship code that needs a newer one.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt -r test-requirements.txt
+      - run: pytest
+
+      - name: Bump the version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$' \
+            || { echo "Not a semver version: '$VERSION'. Enter it without a leading v."; exit 1; }
+          # setup.py and otp_sdk/__init__.py are generated; generate.yml reads pyproject.toml back so a
+          # later regeneration restamps them with this same version. Written here too, so the tagged
+          # commit is already consistent rather than only becoming so on the next regeneration.
+          bump() {
+            grep -Eq "$2" "$1" || { echo "no version line matching /$2/ in $1"; exit 1; }
+            sed -i -E "s|$2|\\1$VERSION\\2|" "$1"
+          }
+          bump pyproject.toml         '^(version = ")[^"]*(")'
+          bump setup.py               '^(VERSION = ")[^"]*(")'
+          bump otp_sdk/__init__.py    '^(__version__ = ")[^"]*(")'
+          git diff --stat
+
+      - name: Commit and tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -am "release: v$VERSION"
+          git tag -a "v$VERSION" -m "release: v$VERSION"
+          git push --follow-tags origin HEAD:main
+
+      - name: Create GitHub release
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: gh release create "v$VERSION" --generate-notes

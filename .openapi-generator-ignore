@@ -24,3 +24,4 @@
 
 # Hand-written, not generated: the README is the front door of a public SDK, so we own it.
 README.md
+pyproject.toml

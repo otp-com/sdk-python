@@ -13,6 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # pyproject.toml holds the released package version and the generator no longer owns it
+      # (.openapi-generator-ignore). Feed it back in below so the version stamped into setup.py and
+      # otp_sdk/__init__.py follows the release instead of drifting back to a hardcoded one.
+      - name: Read the package version
+        id: pkg
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -1)
+          [ -n "$version" ] || { echo 'no version = "..." line in pyproject.toml'; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Fetch the latest contract
         run: curl -sSL -o openapi.yaml https://raw.githubusercontent.com/otp-com/sdk/main/openapi.yaml
       # The generator never deletes an output that fell out of the spec, and on a case-insensitive
@@ -31,7 +40,8 @@ jobs:
         run: |
           docker run --rm -v "$PWD":/local openapitools/openapi-generator-cli generate \
             -i /local/openapi.yaml -g python -o /local \
-            --additional-properties=packageName=otp_sdk,projectName=otp-sdk,packageVersion=1.0.0
+            --git-user-id otp-com --git-repo-id sdk-python \
+            --additional-properties=packageName=otp_sdk,projectName=otp-sdk,packageUrl=https://github.com/otp-com/sdk-python,packageVersion=${{ steps.pkg.outputs.version }}
           rm -f openapi.yaml
       - name: Open PR
         uses: peter-evans/create-pull-request@v6

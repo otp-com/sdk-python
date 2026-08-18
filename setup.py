@@ -34,7 +34,7 @@ setup(
     description="otp OTP API",
     author="OpenAPI Generator community",
     author_email="team@openapitools.org",
-    url="",
+    url="https://github.com/otp-com/sdk-python",
     keywords=["OpenAPI", "OpenAPI-Generator", "otp OTP API"],
     install_requires=REQUIRES,
     packages=find_packages(exclude=["test", "tests"]),

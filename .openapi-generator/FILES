@@ -34,7 +34,6 @@ otp_sdk/models/verify_request.py
 otp_sdk/models/verify_response.py
 otp_sdk/py.typed
 otp_sdk/rest.py
-pyproject.toml
 requirements.txt
 setup.cfg
 setup.py

@@ -1,13 +1,13 @@
 [project]
 name = "otp_sdk"
 version = "1.0.0"
-description = "otp OTP API"
+description = "Python client for the otp.com OTP API: send, verify, and resend one-time passwords."
 authors = [
-  {name = "OpenAPI Generator Community",email = "team@openapitools.org"},
+  {name = "otp.com"},
 ]
 license = { text = "MIT" }
 readme = "README.md"
-keywords = ["OpenAPI", "OpenAPI-Generator", "otp OTP API"]
+keywords = ["otp", "2fa", "one-time-password", "verification", "sdk"]
 requires-python = ">=3.10"
 
 dependencies = [
@@ -18,7 +18,9 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/GIT_USER_ID/GIT_REPO_ID"
+Homepage = "https://github.com/otp-com/sdk-python"
+Repository = "https://github.com/otp-com/sdk-python"
+Issues = "https://github.com/otp-com/sdk-python/issues"
 
 [tool.poetry]
 requires-poetry = ">=2.0"
