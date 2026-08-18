@@ -1,6 +1,6 @@
 [project]
 name = "otp_sdk"
-version = "1.0.0"
+version = "1.1.0"
 description = "Python client for the otp.com OTP API: send, verify, and resend one-time passwords."
 authors = [
   {name = "otp.com"},
