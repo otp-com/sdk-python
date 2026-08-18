@@ -16,10 +16,11 @@ Requires Python 3.10+. Fully type-annotated, models are Pydantic v2.
 Not on PyPI yet, so install from GitHub:
 
 ```sh
-pip install "otp-sdk @ git+https://github.com/otp-com/sdk-python@main"
+pip install "otp-sdk @ git+https://github.com/otp-com/sdk-python@v1.1.0"
 ```
 
-The same line works in `requirements.txt`. For a build that cannot move under you, pin the commit:
+The same line works in `requirements.txt`. Swap the tag for `main` to follow the branch, or for a
+commit SHA to pin harder than a tag:
 
 ```
 otp-sdk @ git+https://github.com/otp-com/sdk-python@<commit-sha>
@@ -28,8 +29,8 @@ otp-sdk @ git+https://github.com/otp-com/sdk-python@<commit-sha>
 uv and Poetry take the same source:
 
 ```sh
-uv add "otp-sdk @ git+https://github.com/otp-com/sdk-python@main"
-poetry add "git+https://github.com/otp-com/sdk-python#main"
+uv add "otp-sdk @ git+https://github.com/otp-com/sdk-python@v1.1.0"
+poetry add "git+https://github.com/otp-com/sdk-python#v1.1.0"
 ```
 
 The distribution is `otp-sdk`, the import is `otp_sdk`. Once the package is on PyPI, `pip install
