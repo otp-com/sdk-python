@@ -17,21 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from otp_sdk.models.channel import Channel
+from otp_sdk.models.recipient_type import RecipientType
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class ResendRequest(BaseModel):
+class VerificationExchangeResponse(BaseModel):
     """
-    ResendRequest
+    VerificationExchangeResponse
     """ # noqa: E501
-    otp_id: UUID = Field(description="The OTP id to resend.")
-    channel: Optional[Channel] = Field(default=None, description="Move this OTP onto a specific channel, e.g. \"sms\" when the recipient has no WhatsApp. The channel must be enabled for your app and the recipient. Omit to advance to the next channel in your routing order, or to repeat the last one once the order is exhausted.")
-    __properties: ClassVar[List[str]] = ["otp_id", "channel"]
+    otp_id: UUID = Field(description="The OTP this verification belongs to.")
+    recipient: StrictStr = Field(description="The recipient that was verified, in full. This is the answer the device could not be trusted to give you.", json_schema_extra={"examples": ["+14155552671"]})
+    recipient_type: RecipientType
+    channel: Optional[Channel] = Field(description="Channel the verified code was delivered on.")
+    verified_at: datetime = Field(description="When the end user entered the correct code.")
+    __properties: ClassVar[List[str]] = ["otp_id", "recipient", "recipient_type", "channel", "verified_at"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +56,7 @@ class ResendRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ResendRequest from a JSON string"""
+        """Create an instance of VerificationExchangeResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +86,7 @@ class ResendRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ResendRequest from a dict"""
+        """Create an instance of VerificationExchangeResponse from a dict"""
         if obj is None:
             return None
 
@@ -90,7 +95,10 @@ class ResendRequest(BaseModel):
 
         _obj = cls.model_validate({
             "otp_id": obj.get("otp_id"),
-            "channel": obj.get("channel")
+            "recipient": obj.get("recipient"),
+            "recipient_type": obj.get("recipient_type"),
+            "channel": obj.get("channel"),
+            "verified_at": obj.get("verified_at")
         })
         return _obj
 

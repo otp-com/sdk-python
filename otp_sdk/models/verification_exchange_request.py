@@ -18,20 +18,18 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
-from otp_sdk.models.channel import Channel
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 from pydantic_core import to_jsonable_python
 
-class ResendRequest(BaseModel):
+class VerificationExchangeRequest(BaseModel):
     """
-    ResendRequest
+    VerificationExchangeRequest
     """ # noqa: E501
-    otp_id: UUID = Field(description="The OTP id to resend.")
-    channel: Optional[Channel] = Field(default=None, description="Move this OTP onto a specific channel, e.g. \"sms\" when the recipient has no WhatsApp. The channel must be enabled for your app and the recipient. Omit to advance to the next channel in your routing order, or to repeat the last one once the order is exhausted.")
-    __properties: ClassVar[List[str]] = ["otp_id", "channel"]
+    verification_token: Annotated[str, Field(min_length=1, strict=True, max_length=128)] = Field(description="The verification_token your app received from POST /client/otp/verify.", json_schema_extra={"examples": ["otp_vt_3xZ9kQ2m7pLw42mN8kaB3xZ9kQ2m7pLw"]})
+    __properties: ClassVar[List[str]] = ["verification_token"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -51,7 +49,7 @@ class ResendRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ResendRequest from a JSON string"""
+        """Create an instance of VerificationExchangeRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,16 +70,11 @@ class ResendRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if channel (nullable) is None
-        # and model_fields_set contains the field
-        if self.channel is None and "channel" in self.model_fields_set:
-            _dict['channel'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ResendRequest from a dict"""
+        """Create an instance of VerificationExchangeRequest from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +82,7 @@ class ResendRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "otp_id": obj.get("otp_id"),
-            "channel": obj.get("channel")
+            "verification_token": obj.get("verification_token")
         })
         return _obj
 

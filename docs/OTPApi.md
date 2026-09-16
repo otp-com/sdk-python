@@ -85,7 +85,8 @@ Name | Type | Description  | Notes
 **200** | Current status of the OTP. |  -  |
 **400** | otp_id is not a valid UUID. |  -  |
 **401** | Missing or invalid API key (also returned for a disabled app or a suspended company). |  -  |
-**404** | OTP not found (the same 404 is returned for an OTP belonging to another company). |  -  |
+**404** | OTP not found (the same 404 is returned for an OTP belonging to another company, or to the other environment: a test key addresses only sandbox OTPs and a live key only live ones). |  -  |
+**503** | The platform is closed for maintenance. Retry after the interval in the Retry-After header. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -164,11 +165,11 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | Resend accepted; the OTP may now be on a different channel. |  -  |
 **401** | Missing or invalid API key (also returned for a disabled app or a suspended company). |  -  |
-**404** | OTP not found (the same 404 is returned for an OTP belonging to another company). |  -  |
+**404** | OTP not found (the same 404 is returned for an OTP belonging to another company, or to the other environment: a test key addresses only sandbox OTPs and a live key only live ones). |  -  |
 **409** | The OTP cannot be resent (resolved, expired, or out of attempts), or the requested channel is not enabled. |  -  |
 **422** | Request body failed validation. |  -  |
 **429** | Resend cooldown has not elapsed; see the Retry-After header. |  -  |
-**503** | Routing picked WhatsApp but our inbound number is not configured. |  -  |
+**503** | Either routing picked WhatsApp and our inbound number is not configured, or the platform is closed for maintenance (see the Retry-After header). |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -253,7 +254,7 @@ Name | Type | Description  | Notes
 **401** | Missing or invalid API key (also returned for a disabled app or a suspended company). |  -  |
 **409** | No channel can reach this recipient, or the idempotency key was reused with a different body. |  -  |
 **422** | Request body failed validation. |  -  |
-**503** | Routing picked WhatsApp but our inbound number is not configured. |  -  |
+**503** | Either routing picked WhatsApp and our inbound number is not configured, or the platform is closed for maintenance (see the Retry-After header). |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -332,8 +333,9 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | Verification result. |  -  |
 **401** | Missing or invalid API key (also returned for a disabled app or a suspended company). |  -  |
-**404** | OTP not found (the same 404 is returned for an OTP belonging to another company). |  -  |
+**404** | OTP not found (the same 404 is returned for an OTP belonging to another company, or to the other environment: a test key addresses only sandbox OTPs and a live key only live ones). |  -  |
 **422** | Request body failed validation. |  -  |
+**503** | The platform is closed for maintenance. Retry after the interval in the Retry-After header. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

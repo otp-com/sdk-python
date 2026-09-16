@@ -12,28 +12,22 @@
 """  # noqa: E501
 
 
-from __future__ import annotations
-import json
-from enum import Enum
-from typing_extensions import Self
+import unittest
 
+from otp_sdk.models.recipient_type import RecipientType
 
-class Status(str, Enum):
-    """
-    Status
-    """
+class TestRecipientType(unittest.TestCase):
+    """RecipientType unit test stubs"""
 
-    """
-    allowed enum values
-    """
-    PENDING = 'pending'
-    APPROVED = 'approved'
-    FAILED = 'failed'
-    EXPIRED = 'expired'
+    def setUp(self):
+        pass
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Status from a JSON string"""
-        return cls(json.loads(json_str))
+    def tearDown(self):
+        pass
 
+    def testRecipientType(self):
+        """Test RecipientType"""
+        # inst = RecipientType()
 
+if __name__ == '__main__':
+    unittest.main()

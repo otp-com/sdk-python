@@ -12,28 +12,27 @@
 """  # noqa: E501
 
 
-from __future__ import annotations
-import json
-from enum import Enum
-from typing_extensions import Self
+import unittest
+
+from otp_sdk.api.verifications_api import VerificationsApi
 
 
-class Status(str, Enum):
-    """
-    Status
-    """
+class TestVerificationsApi(unittest.TestCase):
+    """VerificationsApi unit test stubs"""
 
-    """
-    allowed enum values
-    """
-    PENDING = 'pending'
-    APPROVED = 'approved'
-    FAILED = 'failed'
-    EXPIRED = 'expired'
+    def setUp(self) -> None:
+        self.api = VerificationsApi()
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Status from a JSON string"""
-        return cls(json.loads(json_str))
+    def tearDown(self) -> None:
+        pass
+
+    def test_exchange_verification(self) -> None:
+        """Test case for exchange_verification
+
+        Exchange a verification token for the recipient it proves.
+        """
+        pass
 
 
+if __name__ == '__main__':
+    unittest.main()
