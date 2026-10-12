@@ -3,6 +3,7 @@
 .gitlab-ci.yml
 .travis.yml
 docs/Channel.md
+docs/Completion.md
 docs/ErrorBody.md
 docs/ErrorResponse.md
 docs/OTPApi.md
@@ -28,6 +29,7 @@ otp_sdk/configuration.py
 otp_sdk/exceptions.py
 otp_sdk/models/__init__.py
 otp_sdk/models/channel.py
+otp_sdk/models/completion.py
 otp_sdk/models/error_body.py
 otp_sdk/models/error_response.py
 otp_sdk/models/otp_response.py
@@ -47,6 +49,7 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_completion.py
 test/test_recipient_type.py
 test/test_verification_exchange_request.py
 test/test_verification_exchange_response.py

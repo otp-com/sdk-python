@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **otp_id** | **UUID** |  | 
 **status** | [**Status**](Status.md) |  | 
 **masked_recipient** | **str** | Recipient with the middle digits masked. | 
+**completion** | [**Completion**](Completion.md) | How this OTP completes. \&quot;code\&quot;: the user enters the code and you call POST /otp/verify. \&quot;inbound\&quot;: the user opens action_url and sends the prefilled WhatsApp message; that message approves the OTP, no code is sent. Poll GET /otp/:id or take the otp.approved webhook. | 
 
 ## Example
 

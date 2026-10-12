@@ -9,7 +9,8 @@ Name | Type | Description | Notes
 **status** | [**Status**](Status.md) |  | 
 **channel** | [**Channel**](Channel.md) | Channel the OTP was dispatched on; null until routed. | 
 **masked_recipient** | **str** | Recipient with the middle digits masked. | 
-**action_url** | **str** | WhatsApp link the user opens to receive the code: they send us the prefilled message and we reply with the code over WhatsApp, then they enter it and you call POST /otp/verify. Present only when dispatched on the whatsapp channel; null otherwise. | [optional] 
+**action_url** | **str** | WhatsApp link the user opens: they send us the prefilled message and we reply with the code over WhatsApp (completion \&quot;code\&quot;) or approve the OTP on that message (completion \&quot;inbound\&quot;). Present only when dispatched on the whatsapp channel; null otherwise. Null under the template mode, where the code is pushed directly and the flow is the same as SMS. | [optional] 
+**completion** | [**Completion**](Completion.md) | How this OTP completes. \&quot;code\&quot;: the user enters the code and you call POST /otp/verify. \&quot;inbound\&quot;: the user opens action_url and sends the prefilled WhatsApp message; that message approves the OTP, no code is sent. Poll GET /otp/:id or take the otp.approved webhook. | 
 
 ## Example
 

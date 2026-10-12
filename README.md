@@ -59,6 +59,7 @@ with otp_sdk.ApiClient(config) as client:
     sent.channel           # "sms" | "whatsapp" | "email" | "telegram"
     sent.masked_recipient  # "+14****71", safe to show the user
     sent.action_url        # WhatsApp only, see below
+    sent.completion        # "code" | "inbound", see below
 
     # 2. Verify whatever the user typed in.
     result = otp.verify_otp(otp_sdk.VerifyRequest(otp_id=sent.otp_id, code="123456"))
@@ -82,23 +83,37 @@ otp.send_otp(
 )
 ```
 
-## WhatsApp: the code comes back to the user
+## WhatsApp: how the OTP completes
 
-Verification is identical on every channel, but WhatsApp delivery has one extra step. When routing
-picks WhatsApp, the code has **not** been sent yet and the response carries an `action_url`:
+Every send, resend and status response carries `completion`, which tells you how this OTP finishes.
+SMS, email and Telegram always complete with `code`. Which WhatsApp mode applies is configured per
+account:
+
+| `completion` | `action_url` | What happens |
+| --- | --- | --- |
+| `code` | `None` | The code was delivered (any channel, or WhatsApp in template mode). The user enters it; you call `verify_otp`. |
+| `code` | set | WhatsApp code-back. The user opens the link and sends us the prefilled message; we reply with the code. Then `verify_otp` as on SMS. |
+| `inbound` | set | WhatsApp inbound approval. The prefilled message itself approves the OTP; there is no code. Poll `get_otp_status` every 3 to 5 seconds until `status` leaves `pending`, or take the `otp.approved` webhook. |
 
 ```python
 sent = otp.send_otp(otp_sdk.SendRequest(recipient=recipient))
 
 if sent.action_url:
-    # Open it for the user. They send us the prefilled message from their own WhatsApp,
-    # we reply with the code, and the OTP stays "pending" until they enter it.
+    # Open it for the user. They send us the prefilled message from their own WhatsApp.
     redirect(sent.action_url)
+
+if sent.completion == otp_sdk.Completion.INBOUND:
+    # No code is coming. Wait for that message to approve the OTP.
+    current = otp.get_otp_status(sent.otp_id)
+else:
+    ...  # A code was (or will be) delivered; verify_otp with whatever the user typed in.
 ```
 
-Then call `verify_otp` exactly as on SMS. `action_url` is `None` on every other channel. Don't poll
-for a WhatsApp OTP to approve itself: nothing leaves `pending` without a `verify_otp` call. If the
-user has no WhatsApp, resend on a channel they do have.
+Calling `verify_otp` on an `inbound` OTP never matches while it is pending and spends an attempt;
+once approved it simply reports the approved OTP. Sandbox OTPs always complete with `code`; on
+WhatsApp they still return a sample `action_url`, verify with the sandbox code. If the user has no
+WhatsApp, resend on a channel they do have: leaving WhatsApp for a code channel sets `completion`
+back to `code`.
 
 ## Resending
 
@@ -120,8 +135,24 @@ current = otp.get_otp_status(sent.otp_id)
 current.status  # "pending" | "approved" | "failed" | "expired"
 ```
 
-Useful for reconciliation and support tooling. It is not a substitute for `verify_otp`, which is
-what actually approves an OTP.
+On `code` OTPs this is for reconciliation and support tooling, not a substitute for `verify_otp`,
+which is what actually approves them. On `inbound` OTPs it is how you learn the approval without
+the webhook.
+
+## Exchanging a mobile verification token
+
+If your app uses one of the mobile SDKs, the device verifies against the client API and receives a
+`verification_token` instead of a result. Exchange it on your backend to learn which recipient was
+actually verified; what the app claims about its own verification is not trustworthy.
+
+```python
+verifications = otp_sdk.VerificationsApi(client)
+verified = verifications.exchange_verification(
+    otp_sdk.VerificationExchangeRequest(verification_token=token_from_the_app)
+)
+
+verified.recipient  # the number or address the device actually proved
+```
 
 ## Errors
 
@@ -169,6 +200,7 @@ manager, or call `client.close()` when you are done.
 | [`verify_otp`](./docs/OTPApi.md#verify_otp) | `POST /otp/verify` | [`VerifyResponse`](./docs/VerifyResponse.md) |
 | [`resend_otp`](./docs/OTPApi.md#resend_otp) | `POST /otp/resend` | [`OtpResponse`](./docs/OtpResponse.md) |
 | [`get_otp_status`](./docs/OTPApi.md#get_otp_status) | `GET /otp/{otp_id}` | [`OtpStatusResponse`](./docs/OtpStatusResponse.md) |
+| [`exchange_verification`](./docs/VerificationsApi.md#exchange_verification) | `POST /verifications/exchange` | [`VerificationExchangeResponse`](./docs/VerificationExchangeResponse.md) |
 
 ## Regenerating
 
